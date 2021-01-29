@@ -34,7 +34,7 @@ jobs:
               <packageSourceCredentials>
                   <github>
                       <add key="Username" value="soccerjoshj07" />
-                      <add key="ClearTextPassword" value="${{ secrets.GITHUB_TOKEN }}" />
+                      <add key="ClearTextPassword" value="${{ secrets.PAT }}" />
                   </github>
               </packageSourceCredentials>
           </configuration>
@@ -50,7 +50,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.GITHUB_TOKEN }}
+              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.PAT }}
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
