@@ -13,24 +13,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          nugetfeed="github"
-          nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
-          username="soccerjoshj07"
+      # - run: |
+      #     nugetfeed="github"
+      #     nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
+      #     username="soccerjoshj07"
 
-          # adding to ~/.config/NuGet/NuGet.config
-          nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
+      #     # adding to ~/.config/NuGet/NuGet.config
+      #     nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
 
-          results=$(find . -name "*.nupkg")
-          resultsArray=($results)
+      #     results=$(find . -name "*.nupkg")
+      #     resultsArray=($results)
 
-          #echo "${resultsArray[*]}"
+      #     #echo "${resultsArray[*]}"
 
-          for var in "${resultsArray[@]}"
-          do
-              echo $var
-              nuget push -Source $nugetfeed -ApiKey az $var
-          done
+      #     for var in "${resultsArray[@]}"
+      #     do
+      #         echo $var
+      #         nuget push -Source $nugetfeed -ApiKey az $var
+      #     done
 
       - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
         with:
