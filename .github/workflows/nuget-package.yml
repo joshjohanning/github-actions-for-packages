@@ -50,7 +50,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.GITHUB_TOKEN }} -api
+              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.GITHUB_TOKEN }}
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
