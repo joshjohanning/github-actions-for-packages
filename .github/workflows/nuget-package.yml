@@ -52,7 +52,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.PAT }}
+              nuget push $var --source "github"
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
