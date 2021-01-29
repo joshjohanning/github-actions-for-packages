@@ -17,10 +17,9 @@ jobs:
           nugetfeed="github"
           nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
           username="soccerjoshj07"
-          pat="${{ secrets.PAT}}"
 
           # adding to ~/.config/NuGet/NuGet.config
-          nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password $pat 
+          nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
 
           results=$(find . -name "*.nupkg")
           resultsArray=($results)
@@ -32,3 +31,10 @@ jobs:
               echo $var
               nuget push -Source $nugetfeed -ApiKey az $var
           done
+
+      - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
+        with:
+          nupkg-path:  '*.nupkg'
+          repo-owner:  'soccerjoshj07'
+          gh-user:  'soccerjoshj07'
+          token:  ${{ secrets.GITHUB_TOKEN }}
