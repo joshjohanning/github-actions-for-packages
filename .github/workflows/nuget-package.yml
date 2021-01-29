@@ -20,7 +20,7 @@ jobs:
           username="soccerjoshj07"
 
           # adding to ~/.config/NuGet/NuGet.config
-          nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
+          # nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
           # nuget setapikey ${{ secrets.GITHUB_TOKEN }} -source $nugetsource
 
           results=$(find . -name "*.nupkg")
@@ -31,7 +31,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed -ApiKey $username $var
+              nuget push -Source $nugetfeed -ApiKey $${{ secrets.GITHUB_TOKEN }} $var
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
