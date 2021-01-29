@@ -8,13 +8,12 @@ on:
     branches: 
       - nuget
 
-defaults:
-  run:
-    shell: bash
-    
+env:
+  PAT: ${{ secrets.PAT }}
+
 jobs:
   publish:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: nuget push
@@ -24,7 +23,7 @@ jobs:
           username="soccerjoshj07"
 
           # adding to ~/.config/NuGet/NuGet.config
-          # nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ secrets.GITHUB_TOKEN }}
+          # nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ env.PAT }}
           # nuget setapikey ${{ secrets.GITHUB_TOKEN }} -source $nugetsource
 
           cat > nuget.config << EOF
@@ -38,7 +37,7 @@ jobs:
               <packageSourceCredentials>
                   <github>
                       <add key="Username" value="soccerjoshj07" />
-                      <add key="ClearTextPassword" value="${{ secrets.PAT }}" />
+                      <add key="ClearTextPassword" value="${{ env.PAT }}" />
                   </github>
               </packageSourceCredentials>
           </configuration>
@@ -56,7 +55,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.PAT }}
+              nuget push -Source $nugetfeed $var -ApiKey ${{ env.PAT }}
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
