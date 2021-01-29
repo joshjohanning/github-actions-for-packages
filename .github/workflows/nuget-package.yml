@@ -40,6 +40,8 @@ jobs:
           </configuration>
           EOF
 
+          ls -a
+
           results=$(find . -name "*.nupkg")
           resultsArray=($results)
 
@@ -48,7 +50,7 @@ jobs:
           for var in "${resultsArray[@]}"
           do
               echo $var
-              nuget push -Source $nugetfeed $var
+              nuget push -Source $nugetfeed $var -ApiKey ${{ secrets.GITHUB_TOKEN }} -api
           done
 
       # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
