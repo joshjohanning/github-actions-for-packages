@@ -16,51 +16,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: nuget push
+      # - name: nuget push
+      #   run: |
+      #     nugetfeed="github"
+      #     nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
+      #     username="soccerjoshj07"
+
+      #     # adding to ~/.config/NuGet/NuGet.config
+      #     # nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ env.PAT }}
+      #     # nuget setapikey ${{ secrets.GITHUB_TOKEN }} -source $nugetsource
+
+      #     cat > nuget.config << EOF
+      #     <?xml version="1.0" encoding="utf-8"?>
+      #     <configuration>
+      #         <packageSources>
+      #             <clear />
+      #             <add key="nuget" value="https://api.nuget.org/v3/index.json" />
+      #             <add key="github" value="https://nuget.pkg.github.com/soccerjoshj07/index.json" />
+      #         </packageSources>
+      #         <packageSourceCredentials>
+      #             <github>
+      #                 <add key="Username" value="soccerjoshj07" />
+      #                 <add key="ClearTextPassword" value="${{ env.PAT }}" />
+      #             </github>
+      #         </packageSourceCredentials>
+      #     </configuration>
+      #     EOF
+
+      #     ls -a
+
+      #     less nuget.config
+
+      #     results=$(find . -name "*.nupkg")
+      #     resultsArray=($results)
+
+      #     #echo "${resultsArray[*]}"
+
+      #     for var in "${resultsArray[@]}"
+      #     do
+      #         echo $var
+      #         nuget push -Source $nugetfeed $var -ApiKey ${{ env.PAT }}
+      #     done
+
+      - name: Add NuGet sources
         run: |
-          nugetfeed="github"
-          nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
-          username="soccerjoshj07"
+          dotnet nuget add source https://nuget.pkg.github.com/soccerjoshj07/index.json --name github
+      - name: NuGet push on GitHub
+        run: dotnet nuget push "**/*.nupkg" --source github --api-key ${{ env.PAT }} --skip-duplicate
 
-          # adding to ~/.config/NuGet/NuGet.config
-          # nuget sources add -Name $nugetfeed -Source $nugetsource -username $username -password ${{ env.PAT }}
-          # nuget setapikey ${{ secrets.GITHUB_TOKEN }} -source $nugetsource
+      - name: NuGet push on NuGet
+        run: dotnet nuget push "**/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key ${{ secrets.PAT }} --skip-duplicate
 
-          cat > nuget.config << EOF
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-              <packageSources>
-                  <clear />
-                  <add key="nuget" value="https://api.nuget.org/v3/index.json" />
-                  <add key="github" value="https://nuget.pkg.github.com/soccerjoshj07/index.json" />
-              </packageSources>
-              <packageSourceCredentials>
-                  <github>
-                      <add key="Username" value="soccerjoshj07" />
-                      <add key="ClearTextPassword" value="${{ env.PAT }}" />
-                  </github>
-              </packageSourceCredentials>
-          </configuration>
-          EOF
-
-          ls -a
-
-          less nuget.config
-
-          results=$(find . -name "*.nupkg")
-          resultsArray=($results)
-
-          #echo "${resultsArray[*]}"
-
-          for var in "${resultsArray[@]}"
-          do
-              echo $var
-              nuget push -Source $nugetfeed $var -ApiKey ${{ env.PAT }}
-          done
-
-      # - uses: tanaka-takayoshi/nuget-publish-to-github-packages-action@v2.1
-      #   with:
-      #     nupkg-path:  '*.nupkg'
-      #     repo-owner:  'soccerjoshj07'
-      #     gh-user:  'soccerjoshj07'
-      #     token:  ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload NuGet package
+        uses: actions/upload-artifact@v2.2.1
+        with:
+          name: newton
+          path: "**/*.nupkg"
