@@ -15,8 +15,8 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           nugetfeed="github"
-          nugetsource="https://nuget.pkg.github.com/soccerjoshj07/index.json"
-          username="soccerjoshj07"
+          nugetsource="https://nuget.pkg.github.com/joshjohanning/index.json"
+          username="joshjohanning"
           pat="${{ secrets.PAT}}"
 
           # adding to ~/.config/NuGet/NuGet.config
